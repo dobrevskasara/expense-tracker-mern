@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: expense-backend
+  namespace: expense-tracker
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: expense-backend
+  template:
+    metadata:
+      labels:
+        app: expense-backend
+    spec:
+      containers:
+        - name: backend
+          image: saradobrevska/expense-tracker-backend:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: expense-tracker-config
+                  key: NODE_ENV
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: expense-tracker-config
+                  key: PORT
+            - name: MONGO_URI
+              valueFrom:
+                secretKeyRef:
+                  name: expense-tracker-secrets
+                  key: MONGO_URI
