@@ -9,11 +9,6 @@ services:
       - mongo-data:/data/db
     networks:
       - expense-network
-    healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
   backend:
     build:
@@ -28,8 +23,7 @@ services:
     ports:
       - "5000:5000"
     depends_on:
-      mongodb:
-        condition: service_healthy
+      - mongodb
     networks:
       - expense-network
 
